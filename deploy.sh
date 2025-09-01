@@ -296,55 +296,6 @@ create_function_url() {
     print_success "Function URL: $FUNCTION_URL"
 }
 
-# Test the Lambda function
-test_lambda() {
-    print_status "Testing Lambda function..."
-    
-    # Create a test event
-    cat > test-event.json << EOF
-{
-    "httpMethod": "GET",
-    "path": "/health"
-}
-EOF
-    
-    # Invoke the function
-    aws lambda invoke \
-        --function-name $FUNCTION_NAME \
-        --payload file://test-event.json \
-        --region $AWS_REGION \
-        response.json
-    
-    # Display the response
-    echo "Lambda response:"
-    cat response.json | jq .
-    
-    # Cleanup test files
-    rm test-event.json response.json
-    
-    print_success "Lambda function test completed"
-}
-
-# Create API Gateway (optional)
-create_api_gateway() {
-    print_status "Would you like to create an API Gateway? (y/n)"
-    read -r create_api
-    
-    if [[ $create_api =~ ^[Yy]$ ]]; then
-        print_status "Creating API Gateway..."
-        
-        # This would require additional configuration
-        # For now, we'll just print the manual steps
-        print_warning "API Gateway creation requires additional setup."
-        print_status "Manual steps to create API Gateway:"
-        print_status "1. Go to AWS Console -> API Gateway"
-        print_status "2. Create new REST API"
-        print_status "3. Create resources and methods"
-        print_status "4. Integrate with Lambda function: $FUNCTION_NAME"
-        print_status "5. Deploy API"
-    fi
-}
-
 # Main deployment function
 main() {
     print_status "Starting AWS Lambda Docker deployment..."
